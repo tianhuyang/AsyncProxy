@@ -10,11 +10,11 @@
 
 #import <Foundation/Foundation.h>
 // TCP SOCKET is in use
-#import "GCDAsyncSocket.h"
+#import "SocketInstance.h"
 
 @interface ProcessorHTTP : NSObject
 // RETURNS ARRAY OF PARSED DATA FROM HTTP HEADER
 +(NSArray *)httpHeaderHostPortBodyFromData: (NSData *) data;
 // PROCESSING OF HTTP PROTOCOL
-+(void)processData: (NSData *) data withTag: (long) tag socketClientTCP: (GCDAsyncSocket *) socketClient socketHostTCP: (GCDAsyncSocket *) socketHost mutableDataClient: (NSMutableData *) dataClient mutableDataHost: (NSMutableData *) dataHost;
++(void)processSocketInstance:(SocketInstance*) socketInstance data: (NSData *) data withTag: (long) tag socketClientTCP: (GCDAsyncSocket *) socketClient socketHostTCP: (GCDAsyncSocket *) socketHost mutableDataClient: (NSMutableData *) dataClient mutableDataHost: (NSMutableData *) dataHost;
 @end

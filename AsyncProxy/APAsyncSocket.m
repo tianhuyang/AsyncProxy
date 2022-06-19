@@ -11,18 +11,19 @@
 
 @implementation GCDAsyncSocket(AP)
 
-NSString const *RemoteHostKey = @"_remoteHost";
-@dynamic remoteHost;
-
-- (void)setRemoteHost:(NSString *)remoteHost
-{
-    objc_setAssociatedObject(self, &RemoteHostKey, remoteHost, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-}
-
-- (NSString *)remoteHost
-{
-    return objc_getAssociatedObject(self, &RemoteHostKey);
-}
+//NSString const *IsRemoteKey = @"_isRemote";
+//@dynamic isRemote;
+//
+//- (void)setIsRemote:(BOOL)isRemote
+//{
+//    objc_setAssociatedObject(self, &IsRemoteKey, [NSNumber numberWithBool:isRemote], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+//    
+//}
+//
+//- (BOOL)isRemote
+//{
+//    NSNumber *number = objc_getAssociatedObject(self, &IsRemoteKey);
+//    return number.boolValue;
+//}
 
 @end

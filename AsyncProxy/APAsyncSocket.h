@@ -12,8 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GCDAsyncSocket(AP)
 
-// the remote host name if exists
-@property (strong, nonatomic) NSString *remoteHost;
+//@property BOOL isRemote;
 
 @end
 

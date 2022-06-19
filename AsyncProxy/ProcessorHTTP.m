@@ -7,16 +7,13 @@
 //
 
 #import "ProcessorHTTP.h"
-#import "APAsyncSocket.h"
-#import "Util/TLSSocket.h"
 
 @implementation ProcessorHTTP
 
-+(void)processData: (NSData *) data withTag: (long) tag socketClientTCP: (GCDAsyncSocket *) socketClient socketHostTCP: (GCDAsyncSocket *) socketHost mutableDataClient: (NSMutableData *) dataClient mutableDataHost: (NSMutableData *) dataHost
++(void)processSocketInstance:(SocketInstance*) socketInstance data: (NSData *) data withTag: (long) tag socketClientTCP: (GCDAsyncSocket *) socketClient socketHostTCP: (GCDAsyncSocket *) socketHost mutableDataClient: (NSMutableData *) dataClient mutableDataHost: (NSMutableData *) dataHost
 {
     // access fresh data bytes
     const uint8_t *dataRaw = data.bytes;
-    
     
     if (tag == 1100) {
         
@@ -88,7 +85,8 @@
                         // is host is not connected yet
                         if (!socketHost.isConnected) {
                             // connect to host
-                            if (![socketHost connectToHost:socketHost.remoteHost=socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
+                            [socketInstance setupProxyHost:nil port:0 useTLS:FALSE];
+                            if (![socketInstance connectToHost:socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
                             {
                                 // in case of failure, disconnect client
                                 [socketClient disconnect];
@@ -130,7 +128,8 @@
                 if ([socketClient.userData[4] isEqualToString:@"CONNECT"])
                 {
                     // CONNECT TO REQUESTED HOST SOCKET
-                    if (![socketHost connectToHost:socketHost.remoteHost=socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
+                    [socketInstance setupProxyHost:nil port:0 useTLS:FALSE];
+                    if (![socketInstance connectToHost:socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
                     {
                         // disconnect in case of failure
                         [socketClient disconnect];
@@ -158,7 +157,8 @@
                     // IF TARGET HOST NOT CONNECTED
                     if (!socketHost.isConnected) {
                         // connect to host
-                        if (![socketHost connectToHost:socketHost.remoteHost=socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
+                        [socketInstance setupProxyHost:nil port:0 useTLS:FALSE];
+                        if (![socketInstance connectToHost:socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
                         {
                             // disconnect client on failure
                             [socketClient disconnect];

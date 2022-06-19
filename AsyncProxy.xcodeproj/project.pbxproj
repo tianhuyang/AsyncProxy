@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9F94D00E285EEDC40069D0F4 /* APAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F94D00D285EEDC40069D0F4 /* APAsyncSocket.m */; };
-		9F94D011285F091D0069D0F4 /* TLSSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F94D010285F091D0069D0F4 /* TLSSocket.m */; };
+		9F94D014285FA4550069D0F4 /* APAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F94D013285FA4550069D0F4 /* APAsyncSocket.m */; };
 		ED00DBF31A6C858A0046EE76 /* MenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED00DBF21A6C858A0046EE76 /* MenuView.m */; };
 		ED2ED9091A59D6D70076B7D5 /* ProcessorSocks5.m in Sources */ = {isa = PBXBuildFile; fileRef = ED2ED9081A59D6D70076B7D5 /* ProcessorSocks5.m */; };
 		ED8260921A56645E00A326C3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ED8260911A56645E00A326C3 /* main.m */; };
@@ -38,10 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9F94D00C285EEDC40069D0F4 /* APAsyncSocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APAsyncSocket.h; sourceTree = "<group>"; };
-		9F94D00D285EEDC40069D0F4 /* APAsyncSocket.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APAsyncSocket.m; sourceTree = "<group>"; };
-		9F94D00F285F091D0069D0F4 /* TLSSocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TLSSocket.h; path = Util/TLSSocket.h; sourceTree = "<group>"; };
-		9F94D010285F091D0069D0F4 /* TLSSocket.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TLSSocket.m; path = Util/TLSSocket.m; sourceTree = "<group>"; };
+		9F94D012285FA4550069D0F4 /* APAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APAsyncSocket.h; sourceTree = "<group>"; };
+		9F94D013285FA4550069D0F4 /* APAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APAsyncSocket.m; sourceTree = "<group>"; };
 		ED00DBF11A6C858A0046EE76 /* MenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuView.h; sourceTree = "<group>"; };
 		ED00DBF21A6C858A0046EE76 /* MenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuView.m; sourceTree = "<group>"; };
 		ED2ED9071A59D6D70076B7D5 /* ProcessorSocks5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessorSocks5.h; sourceTree = "<group>"; };
@@ -137,10 +134,8 @@
 				ED2ED9081A59D6D70076B7D5 /* ProcessorSocks5.m */,
 				EDCB204B1A61E5560026FCFA /* ProcessorHTTP.h */,
 				EDCB204C1A61E5560026FCFA /* ProcessorHTTP.m */,
-				9F94D00C285EEDC40069D0F4 /* APAsyncSocket.h */,
-				9F94D00D285EEDC40069D0F4 /* APAsyncSocket.m */,
-				9F94D00F285F091D0069D0F4 /* TLSSocket.h */,
-				9F94D010285F091D0069D0F4 /* TLSSocket.m */,
+				9F94D012285FA4550069D0F4 /* APAsyncSocket.h */,
+				9F94D013285FA4550069D0F4 /* APAsyncSocket.m */,
 			);
 			path = AsyncProxy;
 			sourceTree = "<group>";
@@ -289,8 +284,7 @@
 				ED8260951A56645E00A326C3 /* AppDelegate.m in Sources */,
 				ED8260921A56645E00A326C3 /* main.m in Sources */,
 				ED00DBF31A6C858A0046EE76 /* MenuView.m in Sources */,
-				9F94D011285F091D0069D0F4 /* TLSSocket.m in Sources */,
-				9F94D00E285EEDC40069D0F4 /* APAsyncSocket.m in Sources */,
+				9F94D014285FA4550069D0F4 /* APAsyncSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

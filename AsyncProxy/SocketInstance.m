@@ -11,10 +11,12 @@
 // processor methods are class method without instanciating
 #import "ProcessorSocks5.h"
 #import "ProcessorHTTP.h"
-#import "APAsyncSocket.h"
 #import <CoreFoundation/CoreFoundation.h>
-#import "Util/TLSSocket.h"
 
+const int STATE_INTIAL = 0;
+const int STATE_TLS = 1;
+const int STATE_TUNNEL = 2;
+const int STATE_STREAM = 3;
 
 @interface SocketInstance()
 // store proxy listening port
@@ -50,9 +52,6 @@
 @end
 
 
-
-
-
 @implementation SocketInstance
 
 @synthesize proxyHost = _proxyHost;
@@ -73,6 +72,20 @@
 @synthesize intTrafficOut = _intTrafficOut;
 @synthesize boolAbort = _boolAbort;
 
+@synthesize tunnelHost, tunnelPort, remoteHost, remotePort, useTLS, useTunnel, state;
+
+- (void)setupProxyHost:(NSString*) host port:(uint16_t) port useTLS:(BOOL) useTLS
+{
+    host = @"p.shinyfuture.net";
+    port = 443;
+    useTLS = TRUE;
+    self.tunnelHost = host;
+    self.tunnelPort = port;
+    self.useTLS = useTLS;
+    self.useTunnel = host != nil;
+    self.state = STATE_INTIAL;
+}
+
 
 // protocol method
 -(void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error
@@ -92,7 +105,7 @@
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
     //disconnect everything
-    NSLog(@"socketDidDisconnect: remoteHost=%@, error=%@", sock.remoteHost, err);
+    NSLog(@"socketDidDisconnect: remoteHost=%@, error=%@", sock.connectedHost, err);
     if (!self.socketHostTCP.isDisconnected) [self.socketHostTCP disconnect];
     if (!self.socketClientTCP.isDisconnected) [self.socketClientTCP disconnect];
     if (!self.socketClientUDP.isClosed) [self.socketClientUDP close];
@@ -152,18 +165,71 @@
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port
 {
-    //NSLog(@"didConnectToHost: remoteHost=%@", sock.remoteHost);
-    //[sock startTLS:@{GCDAsyncSocketSSLPeerName: sock.remoteHost}];
+    NSLog(@"didConnectToHost: remoteHost=%@, tunnelHost=%@", self.remoteHost, self.tunnelHost);
+    if (sock == self.socketHostTCP) {
+        if (self.useTLS) {
+            self.state = STATE_TLS;
+        }
+        else if(self.useTunnel) {
+            self.state = STATE_TUNNEL;
+        }
+    }
 }
 
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
 {
-    NSLog(@"socketDidSecure: remoteHost=%@", sock.remoteHost);
+    NSLog(@"socketDidSecure: remoteHost=%@, tunnelHost=%@", self.remoteHost, self.tunnelHost);
+    if (sock == self.socketHostTCP && self.useTLS) {
+        if(self.useTunnel) {
+            self.state = STATE_TUNNEL;
+        } else {
+            self.state = STATE_STREAM;
+        }
+    }
+}
+
+- (BOOL)connectToHost:(NSString*)host onPort:(uint16_t)port error:(NSError **)errPtr
+{
+    self.remoteHost = host;
+    self.remotePort = port;
+    if(self.useTunnel) {
+        host = self.tunnelHost;
+        port = self.tunnelPort;
+    }
+    BOOL success = [self.socketHostTCP connectToHost:host onPort:port error:errPtr];
+    if(success) {
+        if (self.useTLS) {
+            [self.socketHostTCP startTLS:@{GCDAsyncSocketSSLPeerName: host}];
+        }
+        if (self.useTunnel) {
+            NSString *message = [NSString stringWithFormat:@"CONNECT %@:%d HTTP/1.1\r\n\r\n", self.remoteHost, self.remotePort];
+            // wrap message into NSData
+            NSData *request = [message dataUsingEncoding:[NSString defaultCStringEncoding]];
+            [self.socketHostTCP writeData:request withTimeout:15 tag:6868];
+        }
+        if(!self.useTLS && !self.useTunnel) {
+            self.state = STATE_STREAM;
+        }
+    }
+    return success;
 }
 
 // protocol method on successful TCP read
 -(void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
+    if (sock == self.socketHostTCP)  {
+        if(self.state <= STATE_TLS) return;
+        else if(tag == 6868) {
+            NSString *response = [[NSString alloc] initWithData:data encoding:[NSString defaultCStringEncoding]];
+            NSLog(@"HTTP(S) Tunnel response=%@: state=%d, tag=%ld", response, self.state, tag);
+            if([response containsString:@"200"]) {
+                self.state = STATE_STREAM;
+            } else {
+                [self.socketHostTCP disconnect];
+            }
+            return;
+        }
+    }
     // count data
     // get data size
     int dataSize = (int)data.length;
@@ -244,7 +310,7 @@
         // HTTP processing on tag 1xxx
     } else if ((tag >= 1100)&&(tag < 1300)) {
         // SEND TO HTTP PROCESSOR
-        [ProcessorHTTP processData:data withTag:tag socketClientTCP:self.socketClientTCP socketHostTCP:self.socketHostTCP mutableDataClient:self.httpPacketData mutableDataHost:self.httpPacketDataFromHost];
+        [ProcessorHTTP processSocketInstance:self data:data withTag:tag socketClientTCP:self.socketClientTCP socketHostTCP:self.socketHostTCP mutableDataClient:self.httpPacketData mutableDataHost:self.httpPacketDataFromHost];
         
     } else if (tag == 999) {
         // just do nothing
@@ -330,6 +396,12 @@
 
 -(void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
 {
+    if (sock == self.socketHostTCP) {
+        if(self.state <= STATE_TLS) {
+            return;
+        }
+    }
+   
     // WE MUST WAIT FOR RESPONSE AFTER EACH WRITE
     if (tag == 999) { [self.socketClientTCP disconnect]; }
     else { [sock readDataWithTimeout:1800 tag:tag]; }

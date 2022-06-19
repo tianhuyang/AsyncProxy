@@ -13,6 +13,7 @@
 #import "ProcessorHTTP.h"
 #import "APAsyncSocket.h"
 #import <CoreFoundation/CoreFoundation.h>
+#import "Util/TLSSocket.h"
 
 
 @interface SocketInstance()
@@ -151,8 +152,8 @@
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port
 {
-    NSLog(@"didConnectToHost: remoteHost=%@", sock.remoteHost);
-    [sock startTLS:@{GCDAsyncSocketSSLPeerName: sock.remoteHost}];
+    //NSLog(@"didConnectToHost: remoteHost=%@", sock.remoteHost);
+    //[sock startTLS:@{GCDAsyncSocketSSLPeerName: sock.remoteHost}];
 }
 
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
@@ -173,9 +174,7 @@
         // if tag from client
         else if ((tag == 5200)||(tag == 1101)||(tag == 1100)) { self.intTrafficOut = self.intTrafficOut + dataSize; }
     }];
-
-    
-    
+    //NSLog(@"didReadData: tag=%ld, data=%@", tag, data);
     
     // access bytes data
     const uint8_t *dataRaw = data.bytes;

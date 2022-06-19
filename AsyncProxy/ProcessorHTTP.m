@@ -8,6 +8,7 @@
 
 #import "ProcessorHTTP.h"
 #import "APAsyncSocket.h"
+#import "Util/TLSSocket.h"
 
 @implementation ProcessorHTTP
 

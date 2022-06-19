@@ -27,6 +27,7 @@
     self.textPort.textColor = [UIColor grayColor];
     self.textPort.borderStyle = UITextBorderStyleRoundedRect;
     self.textPort.backgroundColor = [UIColor whiteColor];
+    self.textPort.text = @"8080";
     self.switchStarter.on = false;
     self.labelSettings.hidden = true;
     [self loadURL];

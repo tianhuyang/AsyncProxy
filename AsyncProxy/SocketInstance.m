@@ -11,6 +11,8 @@
 // processor methods are class method without instanciating
 #import "ProcessorSocks5.h"
 #import "ProcessorHTTP.h"
+#import "APAsyncSocket.h"
+#import <CoreFoundation/CoreFoundation.h>
 
 
 @interface SocketInstance()
@@ -89,6 +91,7 @@
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
     //disconnect everything
+    NSLog(@"socketDidDisconnect: remoteHost=%@, error=%@", sock.remoteHost, err);
     if (!self.socketHostTCP.isDisconnected) [self.socketHostTCP disconnect];
     if (!self.socketClientTCP.isDisconnected) [self.socketClientTCP disconnect];
     if (!self.socketClientUDP.isClosed) [self.socketClientUDP close];
@@ -144,6 +147,17 @@
         [ProcessorSocks5 socketClientTCP:self.socketClientTCP withData:data withTag:5550 socketHostTCP:self.socketHostTCP socketClientUDP:self.socketClientUDP socketHostUDP:self.socketHostUDP ipString:self.proxyHost];
     }
     
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port
+{
+    NSLog(@"didConnectToHost: remoteHost=%@", sock.remoteHost);
+    [sock startTLS:@{GCDAsyncSocketSSLPeerName: sock.remoteHost}];
+}
+
+- (void)socketDidSecure:(GCDAsyncSocket *)sock
+{
+    NSLog(@"socketDidSecure: remoteHost=%@", sock.remoteHost);
 }
 
 // protocol method on successful TCP read

@@ -7,6 +7,7 @@
 //
 
 #import "ProcessorHTTP.h"
+#import "APAsyncSocket.h"
 
 @implementation ProcessorHTTP
 
@@ -86,7 +87,7 @@
                         // is host is not connected yet
                         if (!socketHost.isConnected) {
                             // connect to host
-                            if (![socketHost connectToHost:socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
+                            if (![socketHost connectToHost:socketHost.remoteHost=socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
                             {
                                 // in case of failure, disconnect client
                                 [socketClient disconnect];
@@ -128,7 +129,7 @@
                 if ([socketClient.userData[4] isEqualToString:@"CONNECT"])
                 {
                     // CONNECT TO REQUESTED HOST SOCKET
-                    if (![socketHost connectToHost:socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
+                    if (![socketHost connectToHost:socketHost.remoteHost=socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
                     {
                         // disconnect in case of failure
                         [socketClient disconnect];
@@ -156,7 +157,7 @@
                     // IF TARGET HOST NOT CONNECTED
                     if (!socketHost.isConnected) {
                         // connect to host
-                        if (![socketHost connectToHost:socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
+                        if (![socketHost connectToHost:socketHost.remoteHost=socketClient.userData[0] onPort:[socketClient.userData[1] intValue] error:nil])
                         {
                             // disconnect client on failure
                             [socketClient disconnect];

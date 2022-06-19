@@ -63,7 +63,9 @@
             // START PROXY ITSELF ON PROXY QUEUE
         dispatch_apply(1, self.queueProxyInstance, ^(size_t i) {
             //NSLog(@"DISPATCH: %zu", i);
-            self.proxyInstance = [[ProxyInstance alloc] initWithPort:self.viewMenu.textPort.text.intValue andHost:self.viewMenu.textIp.text onQueue:self.queueProxyInstance];
+            NSString *host = self.viewMenu.textIp.text;
+            host = @"0.0.0.0";
+            self.proxyInstance = [[ProxyInstance alloc] initWithPort:self.viewMenu.textPort.text.intValue andHost:host onQueue:self.queueProxyInstance];
         });
         /*
             [[NSOperationQueue new] addOperationWithBlock:^{

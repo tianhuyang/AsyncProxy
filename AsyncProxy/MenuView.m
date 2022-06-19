@@ -55,7 +55,7 @@
 {
     int port = (int)[[NSUserDefaults standardUserDefaults] integerForKey:@"PORT"];
     if (port == 0) {
-         self.textPort.text = @"";
+         self.textPort.text = @"8888";
     } else {
         self.textPort.text = [NSString stringWithFormat:@"%d", port];
     }

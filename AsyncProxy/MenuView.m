@@ -14,12 +14,12 @@
 @implementation MenuView
 
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect {
+ // Drawing code
+ }
+ */
 
 -(void)enableInput
 {
@@ -55,7 +55,7 @@
 {
     int port = (int)[[NSUserDefaults standardUserDefaults] integerForKey:@"PORT"];
     if (port == 0) {
-         self.textPort.text = @"8888";
+        self.textPort.text = @"8888";
     } else {
         self.textPort.text = [NSString stringWithFormat:@"%d", port];
     }
@@ -74,54 +74,54 @@
         NSString *ipAddress = [self myIPAddress];
         // IF IP ADDRESS CORRECT
         if (ipAddress.length >= 7) {
-        
-        // ADD ELEMENTS
-        UIButton *ipButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        // ipButton.titleLabel.text = @"OK";
-        ipButton.backgroundColor = [UIColor clearColor];
-        [ipButton addTarget:self
-                     action:@selector(dismissKeyboard)
-           forControlEvents:UIControlEventTouchDown];
-        
-        ipButton.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-        [self addSubview:ipButton];
+            
+            // ADD ELEMENTS
+            UIButton *ipButton = [UIButton buttonWithType:UIButtonTypeSystem];
+            // ipButton.titleLabel.text = @"OK";
+            ipButton.backgroundColor = [UIColor clearColor];
+            [ipButton addTarget:self
+                         action:@selector(dismissKeyboard)
+               forControlEvents:UIControlEventTouchDown];
+            
+            ipButton.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+            [self addSubview:ipButton];
             
             
-           
-        
-        
-        
-        
-        // [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"PORT"];
-        
-        // CREATE PORT TEXT
-        self.textPort = [UITextField new];
-        self.textPort.tag = 2;
-        self.textPort.userInteractionEnabled = true;
-        self.textPort.keyboardType = UIKeyboardTypeNumberPad;
-        self.textPort.delegate = self;
-        self.textPort.borderStyle = UITextBorderStyleRoundedRect;
-        self.textPort.backgroundColor = [UIColor whiteColor];
-        self.textPort.placeholder = @"AUTO";
-        self.textPort.textAlignment = NSTextAlignmentCenter;
-        self.textPort.font = [UIFont fontWithName:@"Arial" size:70];
-        self.textPort.frame = CGRectMake((self.frame.size.width/2) - 110, self.frame.size.height/3, 220, 65);
+            
+            
+            
+            
+            
+            // [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"PORT"];
+            
+            // CREATE PORT TEXT
+            self.textPort = [UITextField new];
+            self.textPort.tag = 2;
+            self.textPort.userInteractionEnabled = true;
+            self.textPort.keyboardType = UIKeyboardTypeNumberPad;
+            self.textPort.delegate = self;
+            self.textPort.borderStyle = UITextBorderStyleRoundedRect;
+            self.textPort.backgroundColor = [UIColor whiteColor];
+            self.textPort.placeholder = @"AUTO";
+            self.textPort.textAlignment = NSTextAlignmentCenter;
+            self.textPort.font = [UIFont fontWithName:@"Arial" size:70];
+            self.textPort.frame = CGRectMake((self.frame.size.width/2) - 110, self.frame.size.height/3, 220, 65);
             self.textPort.textColor = [UIColor grayColor];
-        [self addSubview:self.textPort];
-        
-        // CREATE IP TEXT
-        self.textIp = [UILabel new];
-        self.textIp.tag = 1;
-        //self.textIp.userInteractionEnabled = true;
-        //self.textIp.keyboardType = UIKeyboardTypeNumberPad;
+            [self addSubview:self.textPort];
+            
+            // CREATE IP TEXT
+            self.textIp = [UILabel new];
+            self.textIp.tag = 1;
+            //self.textIp.userInteractionEnabled = true;
+            //self.textIp.keyboardType = UIKeyboardTypeNumberPad;
             // self.textPort.keyboardType = UIKeyboardTypeDecimalPad;
-        //self.textIp.delegate = self;
-        //self.textIp.placeholder = @"172.20.10.1";
-        self.textIp.textAlignment = NSTextAlignmentCenter;
-        self.textIp.font = [UIFont fontWithName:@"Arial" size:30];
-        self.textIp.textColor = [UIColor grayColor];
-        self.textIp.frame = CGRectMake((self.frame.size.width/2) - 110, self.textPort.frame.origin.y - 45, 220, 30);
-        [self addSubview:self.textIp];
+            //self.textIp.delegate = self;
+            //self.textIp.placeholder = @"172.20.10.1";
+            self.textIp.textAlignment = NSTextAlignmentCenter;
+            self.textIp.font = [UIFont fontWithName:@"Arial" size:30];
+            self.textIp.textColor = [UIColor grayColor];
+            self.textIp.frame = CGRectMake((self.frame.size.width/2) - 110, self.textPort.frame.origin.y - 45, 220, 30);
+            [self addSubview:self.textIp];
             
             
             // CREATE STATUS STRING
@@ -133,11 +133,11 @@
             self.labelStatus.font = [UIFont fontWithName:@"Arial" size:18];
             self.labelStatus.frame = CGRectMake(15, self.textPort.frame.origin.y + self.textPort.frame.size.height + 9, self.frame.size.width - 30, 50);
             [self addSubview:self.labelStatus];
-        
-        // CREATE SWITCH
-        self.switchStarter = [UISwitch new];
-        self.switchStarter.frame = CGRectMake(self.frame.size.width/2 - (self.switchStarter.bounds.size.width/2), self.textPort.frame.origin.y + self.textPort.frame.size.height + self.labelStatus.frame.size.height + self.switchStarter.bounds.size.height, 0, 0);
-        [self addSubview:self.switchStarter];
+            
+            // CREATE SWITCH
+            self.switchStarter = [UISwitch new];
+            self.switchStarter.frame = CGRectMake(self.frame.size.width/2 - (self.switchStarter.bounds.size.width/2), self.textPort.frame.origin.y + self.textPort.frame.size.height + self.labelStatus.frame.size.height + self.switchStarter.bounds.size.height, 0, 0);
+            [self addSubview:self.switchStarter];
             
             
             
@@ -215,10 +215,10 @@
             self.labelSettings.frame = CGRectMake(15, self.switchStarter.frame.origin.y + self.switchStarter.frame.size.height, self.frame.size.width - 30, 110);
             [self addSubview:self.labelSettings];
             
-        
-        
-        // ROUTINES
-        [self loadURL];
+            
+            
+            // ROUTINES
+            [self loadURL];
             
             // ON IP ADDRESS ERROR
         } else {
@@ -339,18 +339,14 @@
         temp_addr = interfaces;
         while(temp_addr != NULL) {
             if(temp_addr->ifa_addr->sa_family == AF_INET) {
-                //~NSLog(@"INTERFACES: %@", [NSString stringWithUTF8String:temp_addr->ifa_name]);
+                NSString *ifaName = [NSString stringWithUTF8String:temp_addr->ifa_name];
+                NSLog(@"INTERFACE: %@", ifaName);
                 // Check if interface is en0 which is the wifi connection on the iPhone
-                if (
-                    ([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"])
-                    || ([[NSString stringWithUTF8String:temp_addr->ifa_name] hasPrefix:@"bridge"])
-                    )
+                if (![ifaName hasPrefix:@"lo"])
                 {
                     // Get NSString from C String
                     address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
-                    
                 }
-                
             }
             
             temp_addr = temp_addr->ifa_next;

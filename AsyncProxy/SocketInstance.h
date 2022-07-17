@@ -28,6 +28,8 @@ extern const int STATE_STREAM;
 @property NSString *tunnelHost;
 @property uint16_t tunnelPort;
 
+@property NSString *proxyAuthentication;
+
 @property NSString *remoteHost;
 @property uint16_t remotePort;
 
@@ -36,6 +38,7 @@ extern const int STATE_STREAM;
 
 @property int state;
 
+- (void)setupProxyHost:(NSString*) host port:(uint16_t) port useTLS:(BOOL) useTLS username:(NSString*) username password:(NSString*) password;
 - (void)setupProxyHost:(NSString*) host port:(uint16_t) port useTLS:(BOOL) useTLS;
 - (BOOL)connectToHost:(NSString*)host onPort:(uint16_t)port error:(NSError **)errPtr;
 

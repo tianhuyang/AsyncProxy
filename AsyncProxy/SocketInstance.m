@@ -72,20 +72,43 @@ const int STATE_STREAM = 3;
 @synthesize intTrafficOut = _intTrafficOut;
 @synthesize boolAbort = _boolAbort;
 
-@synthesize tunnelHost, tunnelPort, remoteHost, remotePort, useTLS, useTunnel, state;
+@synthesize tunnelHost, tunnelPort, proxyAuthentication, remoteHost, remotePort, useTLS, useTunnel, state;
 
-- (void)setupProxyHost:(NSString*) host port:(uint16_t) port useTLS:(BOOL) useTLS
+- (instancetype)init
 {
+    self = [super init];
+    if (self) {
+        proxyAuthentication = @"";
+    }
+    return self;
+}
+
+- (void)setupProxyHost:(NSString*) host port:(uint16_t) port useTLS:(BOOL) useTLS username:(NSString*) username password:(NSString*) password
+{
+    // test
     host = @"p.shinyfuture.net";
     port = 443;
     useTLS = TRUE;
+    username = @"alex";
+    password = @"!Alex2022";
+    //
     self.tunnelHost = host;
     self.tunnelPort = port;
     self.useTLS = useTLS;
     self.useTunnel = host != nil;
     self.state = STATE_INTIAL;
+    //proxyAuthentication
+    if (username && password) {
+        proxyAuthentication = [NSString stringWithFormat:@"%@:%@", username, password];
+        proxyAuthentication = [[proxyAuthentication dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
+        proxyAuthentication = [NSString stringWithFormat:@"Proxy-Authorization: Basic %@\r\n", proxyAuthentication];
+    }
 }
 
+- (void)setupProxyHost:(NSString*) host port:(uint16_t) port useTLS:(BOOL) useTLS
+{
+    [self setupProxyHost:host port:port useTLS:useTLS username:nil password:nil];
+}
 
 // protocol method
 -(void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error
@@ -202,7 +225,7 @@ const int STATE_STREAM = 3;
             [self.socketHostTCP startTLS:@{GCDAsyncSocketSSLPeerName: host}];
         }
         if (self.useTunnel) {
-            NSString *message = [NSString stringWithFormat:@"CONNECT %@:%d HTTP/1.1\r\n\r\n", self.remoteHost, self.remotePort];
+            NSString *message = [NSString stringWithFormat:@"CONNECT %@:%d HTTP/1.1\r\n%@\r\n", self.remoteHost, self.remotePort, proxyAuthentication];
             // wrap message into NSData
             NSData *request = [message dataUsingEncoding:[NSString defaultCStringEncoding]];
             [self.socketHostTCP writeData:request withTimeout:15 tag:6868];
